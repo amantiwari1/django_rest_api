@@ -1,11 +1,11 @@
-
+from passwords import TOKEN
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=g$z8egd76!_+3ix8x4^82lm9&o0-2q=jk&4i@sd07^5v3g$og'
+SECRET_KEY = TOKEN
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
