@@ -1,50 +1,54 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
-from rest_framework.parsers import JSONParser
 from .models import Article
 from .serializer import ArticleSerializers
-
-from django.views.decorators.csrf import csrf_exempt
-
-# Create your views here.
-@csrf_exempt
-def article_list(request):
-    if request.method == 'GET':
-        articles = Article.objects.all()
-        serializer = ArticleSerializers(articles, many=True)
-        return JsonResponse(serializer.data, safe=False)
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = ArticleSerializers(data=data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
-
-@csrf_exempt
-def article_detail(request, pk):
-    try:
-        articles = Article.objects.get(pk=pk)
-    except Article.DoesNotExist:
-        return HttpResponse(status=404)
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication 
 
 
-    if request.method == "GET":
-        serializer = ArticleSerializers(articles)
-        return JsonResponse(serializer.data)
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = ArticleSerializers(articles,data=data)
+class SubscriberViewSet(ModelViewSet):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    serializer_class = ArticleSerializers
+    queryset = Article.objects.all()
 
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
+
+# class ArticesAPI(APIView):
+#     def get(self, request):
+#         articles = Article.objects.all()
+#         serializer = ArticleSerializers(articles, many=True)
+#         return Response(serializer.data)
+#     def post(self, request):
+#         serializer = ArticleSerializers(data=request.data)
+
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    elif request.method == 'DELETE':
-        articles.delete()
-        return HttpResponse(status=204)
+# class DetailsAPI(APIView):
+#     def get_object(self, id):
+#         try:
+#             return Article.objects.get(pk=id)
+#         except Article.DoesNotExist:
+#             return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+    
+#     def get(self, request, id):
+#         articles = self.get_object(id)
+#         serializer = ArticleSerializers(articles)
+#         return Response(serializer.data)
+
+#     def put(self, request,id):
+#         articles = self.get_object(id)
+#         serializer = ArticleSerializers(articles,data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+#     def delete(self, request, id):
+#         articles = self.get_object(id)
+#         articles.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 
 
 

@@ -1,6 +1,11 @@
 from django.urls import path
-from .views import article_list , article_detail
-urlpatterns = [
-    path('articles/', article_list),
-    path('articles/<int:pk>/', article_detail),
-]
+from .views import SubscriberViewSet
+
+from rest_framework.routers import SimpleRouter
+
+
+router = SimpleRouter()
+router.register("article", SubscriberViewSet)
+
+urlpatterns = router.urls
+

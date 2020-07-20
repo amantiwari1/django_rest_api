@@ -1,4 +1,4 @@
-from passwords import TOKEN
+from .passwords import TOKEN
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
