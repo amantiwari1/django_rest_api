@@ -2,10 +2,12 @@ from .models import Article
 from .serializer import ArticleSerializers
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication 
+from rest_framework.permissions import IsAuthenticated
 
 
 class SubscriberViewSet(ModelViewSet):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
     serializer_class = ArticleSerializers
     queryset = Article.objects.all()
 
